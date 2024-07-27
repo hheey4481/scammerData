@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사기꾼 조회</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .search-register-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .search-register-container .form-inline {
+            display: flex;
+            align-items: center;
+        }
+        .search-register-container .btn {
+            margin-left: 10px;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .radio-group input {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="p-5 mb-5 text-center">
+    <a th:href="@{/scammers}">
+        <img src="/img/scammerLogo.png" alt="logo" style="width: 250px; height: 250px;">
+    </a>
+</div>
+<div class="container">
+    <div class="search-register-container">
+        <form th:action="@{/scammers/search}" method="get" class="form-inline">
+            <div class="radio-group">
+                <input type="radio" id="searchByName" name="searchType" value="name" checked>
+                <label for="searchByName">이름으로 검색</label>
+                <input type="radio" id="searchByAccount" name="searchType" value="account" class="ml-3">
+                <label for="searchByAccount">계좌번호로 검색</label>
+            </div>
+            <input type="text" name="keyword" class="form-control mr-sm-2" placeholder="검색어를 입력하세요">
+            <button type="submit" class="btn btn-outline-success">검색</button>
+        </form>
+        <button type="button" id="create-btn" th:onclick="|location.href='@{/scammers/register}'|" class="btn btn-secondary btn-sm">사기꾼 등록</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">이름</th>
+            <th scope="col">은행</th>
+            <th scope="col">계좌번호</th>
+            <th scope="col">등록일</th>
+            <th scope="col">신고 횟수</th>
+            <th scope="col">삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${scammers}">
+            <td th:text="${item.name}"></td>
+            <td th:text="${item.bank}"></td>
+            <td th:text="${item.account}"></td>
+            <td th:text="${#temporals.format(item.createdAt, 'yyyy-MM-dd')}"></td>
+            <td th:text="${item.count}"></td>
+            <td>
+                <form th:action="@{/scammers/delete/{id}(id=${item.id})}" method="post">
+                    <button type="submit" class="btn btn-primary btn-sm">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
